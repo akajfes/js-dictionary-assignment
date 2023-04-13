@@ -1,0 +1,27 @@
+{
+  "name": "js-dictionary-assignment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "js/index.js",
+  "source": "index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akajfes/js-dictionary-assignment.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akajfes/js-dictionary-assignment/issues"
+  },
+  "homepage": "https://github.com/akajfes/js-dictionary-assignment#readme",
+  "dependencies": {
+    "bootstrap": "^5.2.3"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.3"
+  }
+}
