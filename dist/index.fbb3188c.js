@@ -576,7 +576,9 @@ searchedWords.addEventListener("click", (event)=>{
     let parent = target.parentNode;
     if (target.classList.contains("favourite-word")) {
         let favourites = document.querySelector(".favourite-words");
+        let favButton = document.querySelector(".favourite-word");
         favourites.append(parent);
+        parent.removeChild(favButton);
     }
 });
 
