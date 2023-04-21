@@ -559,14 +559,28 @@ function hmrAccept(bundle, id) {
 },{}],"bDbGG":[function(require,module,exports) {
 var _bootstrapMinCss = require("bootstrap/dist/css/bootstrap.min.css");
 var _dictionaryJs = require("./api/dictionary.js");
-function getWordData(callback) {
-    (0, _dictionaryJs.getWord)(callback).then((res)=>res.json()).then((definition)=>{
-        callback(definition);
-    });
-}
-console.log(getDefinition("hello"));
+var _wordItemJs = require("./dom/word-item.js");
+let dictionarySearch = document.querySelector("#dictionary-search");
+dictionarySearch.addEventListener("submit", (event)=>{
+    event.preventDefault();
+    let dictionarySearchForm = event.target.elements["word"];
+    (0, _dictionaryJs.getWord)(dictionarySearchForm.value).then((res)=>res.json()).then((word)=>(0, _wordItemJs.createWordItem)(word[0]));
+});
+//In the main.js file, create an event listener on the “searched words” list that will listen to clicks,
+//check if it’s the button on the word item (the best way to do this is check if the element contains
+//a certain class). If it is, then it will add that element to the “Favourite Words” list and
+//also remove the button itself.
+let searchedWords = document.querySelector(".recently-search-words");
+searchedWords.addEventListener("click", (event)=>{
+    let target = event.target;
+    let parent = target.parentNode;
+    if (target.classList.contains("favourite-word")) {
+        let favourites = document.querySelector(".favourite-words");
+        favourites.append(parent);
+    }
+});
 
-},{"bootstrap/dist/css/bootstrap.min.css":"i5LP7","./api/dictionary.js":"bzxk5"}],"i5LP7":[function() {},{}],"bzxk5":[function(require,module,exports) {
+},{"bootstrap/dist/css/bootstrap.min.css":"i5LP7","./api/dictionary.js":"bzxk5","./dom/word-item.js":"knX6L"}],"i5LP7":[function() {},{}],"bzxk5":[function(require,module,exports) {
 // fetch from the dictionary api here!
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -605,6 +619,53 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["csuDB","bDbGG"], "bDbGG", "parcelRequire4df4")
+},{}],"knX6L":[function(require,module,exports) {
+/*
+HTML Structure 
+
+<li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto definition">
+        <div class="fw-bold">WORD HERE</div>
+        <p>PARAGRAPH HERE</p>
+    </div>
+    <button class="m-2 btn btn-primary favourite-word">Add To Favourites</button>
+</li>
+
+
+Note: I'm sure you've read the PDF but there will be no marks given
+for using innerHTML or innerText. 
+*/ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "createWordItem", ()=>createWordItem);
+function createWordItem(wordData) {
+    let recents = document.querySelector(".recently-search-words");
+    //setting up li
+    let li = document.createElement("li");
+    li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-start");
+    //first div
+    let outerDiv = document.createElement("div");
+    outerDiv.classList.add("ms-2", "me-auto", "definition");
+    //second div
+    let innerDiv = document.createElement("div");
+    innerDiv.classList.add("fw-bold");
+    let word = wordData.word;
+    innerDiv.textContent = word;
+    //Get first “definition” in the first “meaning” from the wordData object.
+    let p = document.createElement("p");
+    let definition = wordData.meanings[0].definitions[0].definition;
+    p.textContent = definition;
+    //button
+    let favButton = document.createElement("button");
+    favButton.classList.add("btn", "btn-primary", "favourite-word");
+    favButton.textContent = "Add To Favourites";
+    li.append(outerDiv);
+    outerDiv.append(innerDiv);
+    outerDiv.append(p);
+    li.append(favButton);
+    recents.append(li);
+    return li;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["csuDB","bDbGG"], "bDbGG", "parcelRequire4df4")
 
 //# sourceMappingURL=index.fbb3188c.js.map
